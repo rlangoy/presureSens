@@ -7,16 +7,66 @@
         padding: 0;
         margin: 0;
         background: #fff
-    }</style>
+    }
+    .btn-large{
+      padding:9px 30px;
+      font-size:17px;
+    }
+
+    .btn-circled{
+      border-radius:20px
+    }
+
+    a{
+      font-family:arial;
+      text-decoration:none;
+      font-weight:normal;
+      outline:none;
+      text-transform:uppercase;
+      margin:2px 4px;
+    }
+
+    /*define basic button*/
+
+    .btn{
+      border:1px solid #0099CC;
+      color:#0099CC;
+      box-shadow: 1px 1px 5px #888888;
+    }
+
+    .btn-blue{
+      background-color:#00A9E7;
+      color:#FFF
+    }
+
+    .btn:hover{
+      border:1px solid #056495;
+      color:#056495
+    }
+
+    .btn:active{
+      background-color:#056495;
+      color:#FFF
+    }
+    </style>
 </head>
 <hr>
 
 <body>
 
 <h1>Presure Sensing</h1>
-<a href="adcGauge.html">Gauge</a><br>
+
+
+<a class="btn btn-circled btn-large btn-blue" href="adcGauge.html">
+  Gauge
+</a>
 <br>
-<a href="line.html">Line Graph</a><br>
+<br>
+<br>
+<a class="btn btn-circled btn-large btn-blue" href="line.html">
+  Line Chart
+</a>
+
 
 </body>
 </html>
