@@ -3,12 +3,6 @@ from time         import sleep
 from _thread       import allocate_lock
 
 mws2 = MicroWebSrv2()
-mws2.AddMimeType('.gz', 'application/gz')
-
-#@staticmethod
-#AddMimeType('.tar', 'application/x-tar')
-#def AddMimeType('.gz', 'application/gz')
-
 
 #mws2.SetEmbeddedConfig()
 voltage=100
