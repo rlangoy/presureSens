@@ -2,199 +2,21 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Gauge Test</title>
+    <title>Presure sensor</title>
     <style>body {
         padding: 0;
         margin: 0;
         background: #fff
     }</style>
-
-
 </head>
 <hr>
 
+<body>
 
-
-
-<canvas data-type="radial-gauge"
-        data-value="0"
-        data-width="800"
-        data-height="800"
-        data-bar-width="10"
-        data-bar-shadow="5"
-        data-color-bar-progress="rgba(50,200,50,.75)"   
-        animation=False     
-></canvas>
-
-
-
-<script async src="gauge.min.js"></script>
-
-<script>
-
-
-
-if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function(cb) {
-        var i = 0, s = this.length;
-        for (; i < s; i++) {
-            cb && cb(this[i], i, this);
-        }
-    }
-}
-
-document.fonts && document.fonts.forEach(function(font) {
-    font.loaded.then(function() {
-        if (font.family.match(/Led/)) {
-            document.gauges.forEach(function(gauge) {
-                gauge.update();
-            });
-        }
-    });
-});
-
-var timers = [];
-
-function animateGauges() {
-    document.gauges.forEach(function(gauge) {
-        timers.push(setInterval(function() {
-            var min = gauge.options.minValue - 20;
-            var max = gauge.options.maxValue + 20;
-             SendMsg("Req adcVal)");
-           // gauge.value = min + Math.random() * (max - min);
-        }, gauge.animation.duration - 50 ));
-    });
-}
-
-function stopGaugesAnimation() {
-    timers.forEach(function(timer) {
-        clearInterval(timer);
-    });
-}
-
-
-</script>
-
-
-    <script language="javascript">
-
-        var output;
-
-        function init()
-        {
-           // output = gauge.value;//document.getElementById("output");
-            testWebSocket();
-            resize();
-        }
-
-        function testWebSocket()
-        {
-            var scheme
-            if (window.location.protocol == 'https:')
-                scheme = 'wss:';
-            else
-                scheme = 'ws:';
-            var wsUri = scheme + '//' + window.location.hostname;
-            writeToScreen("Connecting to " + wsUri + "...")
-            websocket           = new WebSocket(wsUri);
-            websocket.onopen    = function(evt) { onOpen    (evt) };
-            websocket.onclose   = function(evt) { onClose   (evt) };
-            websocket.onmessage = function(evt) { onMessage (evt) };
-            websocket.onerror   = function(evt) { onError   (evt) };
-        }
-
-        function onOpen(evt)
-        {
-            console.log('WebSocket connection opened');
-            writeToScreen("<strong>-- CONNECTED --</strong>");
-            SendMsg("Get : A0)");
-            //setTimeout( function() { websocket.close() }, 3000 )
-            document.gauges.forEach(function(gauge) {
-                    gauge.value = 0;
-                    gauge.update({animation: false})
-
-
-                });
-
-        }
-
-        function onClose(evt)
-        {
-            console.log('WebSocket connection opened');
-            writeToScreen("<strong>-- DISCONNECTED --</strong>");
-        }
-
-        function onMessage(evt)
-        {
-            
-            const obj = JSON.parse(evt.data);
-            if (obj.A0)  
-            {
-            //writeToScreen('MSG FROM SERVER : <span style="color: blue;">' + evt.data + '</span>');
-                document.gauges.forEach(function(gauge) {
-                    var adcVal=parseFloat(obj.A0);
-                    //adcVal=10.2;
-                    console.log('adcVal: ' + adcVal);
-                    gauge.value = adcVal;
-                    SendMsg("Get : A0)");
-                    //document.getElementById('r').value=adcVal*10;
-
-                   // gauge.update({animation: false,
-                    //              value: adcVal})
-                   // gauge.update()
-
-
-                });
-            }
-            else
-                console.log('Unknown WebSocket msg from server:' + evt.data );
-
-        }
-
-        function onError(evt)
-        {
-            writeToScreen('ERROR : <span style="color: red;">' + evt.data + '</span>');
-        }
-
-        function SendMsg(msg)
-        {
-            writeToScreen('MSG TO SERVER : <span style="color: green;">' + msg + '</span>');
-            websocket.send(msg);
-        }
-
-        function writeToScreen(s)
-        {
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = s;
-           // output.appendChild(pre);
-        }
-
-        function resize() {
-          
-                height = window.innerHeight-40;
-                width = window.innerWidth-40;
-
-                    document.gauges.forEach(function(gauge) {
-                            
-                            gauge.update({width : width,
-                                height : height
-
-                            })
-
-
-                        });
-
-
-        };
-
-        window.addEventListener('resize', resize, false);
-
-
-        window.addEventListener("load", init, false);
-
-    </script>
-
+<h1>Presure Sensing</h1>
+<a href="adcGauge.html">Gauge</a><br>
+<br>
+<a href="line.html">Line Graph</a><br>
 
 </body>
 </html>
