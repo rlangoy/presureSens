@@ -11,10 +11,17 @@
 </head>
 <body>
 
-<button onclick="animateGauges()">Animate</button>
-<button onclick="stopGaugesAnimation()">Stop animation</button>
+
+<tr>
+                    <td style="width:14.4px; text-align: right">R: </td>
+                    <td><input class="enabled" id="r" type="range" min="0" max="1023" step="1" oninput="sendRGB();" value="0"></td>
+                </tr>
+
 
 <hr>
+
+
+
 
 <canvas data-type="radial-gauge"
         data-value="0"
@@ -22,7 +29,8 @@
         data-height="800"
         data-bar-width="10"
         data-bar-shadow="5"
-        data-color-bar-progress="rgba(50,200,50,.75)"
+        data-color-bar-progress="rgba(50,200,50,.75)"   
+        animation=False     
 ></canvas>
 
 
@@ -58,7 +66,7 @@ function animateGauges() {
             var max = gauge.options.maxValue + 20;
              SendMsg("Req adcVal)");
            // gauge.value = min + Math.random() * (max - min);
-        }, gauge.animation.duration ));
+        }, gauge.animation.duration - 50 ));
     });
 }
 
@@ -102,8 +110,14 @@ function stopGaugesAnimation() {
         {
             console.log('WebSocket connection opened');
             writeToScreen("<strong>-- CONNECTED --</strong>");
-            SendMsg("Hello world :)");
+            SendMsg("Get : A0)");
             //setTimeout( function() { websocket.close() }, 3000 )
+            document.gauges.forEach(function(gauge) {
+                    gauge.value = 0;
+                    gauge.update({animation: false})
+
+
+                });
 
         }
 
@@ -115,14 +129,28 @@ function stopGaugesAnimation() {
 
         function onMessage(evt)
         {
-            console.log('WebSocket msg from server:' + evt.data );
+            
+            const obj = JSON.parse(evt.data);
+            if (obj.A0)  
+            {
             //writeToScreen('MSG FROM SERVER : <span style="color: blue;">' + evt.data + '</span>');
                 document.gauges.forEach(function(gauge) {
-                    var adcVal=parseFloat(evt.data);
+                    var adcVal=parseFloat(obj.A0);
                     //adcVal=10.2;
                     console.log('adcVal: ' + adcVal);
                     gauge.value = adcVal;
+                    SendMsg("Get : A0)");
+                    //document.getElementById('r').value=adcVal*10;
+
+                   // gauge.update({animation: false,
+                    //              value: adcVal})
+                   // gauge.update()
+
+
                 });
+            }
+            else
+                console.log('Unknown WebSocket msg from server:' + evt.data );
 
         }
 

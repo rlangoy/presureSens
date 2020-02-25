@@ -7,6 +7,9 @@ adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 
 
 mws2 = MicroWebSrv2()
 mws2.SetEmbeddedConfig()
+global _voltage
+_voltage = 1
+_webSockets = [ ]
 voltage=100
 def OnWebSocketAccepted(microWebSrv2, webSocket) :
     voltage=100
@@ -17,25 +20,21 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
     webSocket.OnTextMessage   = OnWebSocketTextMsg
     webSocket.OnBinaryMessage = OnWebSocketBinaryMsg
     webSocket.OnClosed        = OnWebSocketClosed
-
+    global _webSockets
+    _webSockets.append(webSocket)
+    
 
 # ============================================================================
 # ============================================================================
 # ============================================================================
-
-#global _voltage
-_voltage = 1
-
 
 
 def OnWebSocketTextMsg(webSocket, msg) :
-    print('WebSocket text --message: %s' % msg)
+    #print('WebSocket text --message: %s' % msg)
     global _voltage       # Acess the global voltage value
-  #  _voltage=_voltage+7
-  #  if(_voltage >99):
-  #       _voltage=1
-    
-    webSocket.SendTextMessage('%s' % _voltage)
+    JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
+    webSocket.SendTextMessage(JSONmessage)
+  
 
 # ------------------------------------------------------------------------
 
@@ -46,6 +45,10 @@ def OnWebSocketBinaryMsg(webSocket, msg) :
 
 def OnWebSocketClosed(webSocket) :
     print('WebSocket %s:%s closed' % webSocket.Request.UserAddress)
+    global _webSockets
+
+    if webSocket in _webSockets :
+            _webSockets.remove(webSocket)
 
 # ============================================================================
 # ============================================================================
@@ -61,11 +64,12 @@ cnt=0
 # Main program loop until keyboard interrupt,
 try :
     while True :
-        _voltage = adc.read()*100/4095.0
+        _voltage = (adc.read()*100/4095.0)+.01
         #print(_voltage)
         if(_voltage > 100):
             _voltage=0
          
-        sleep(.1)
+        sleep(.1)        
+        
 except KeyboardInterrupt :
     mws2.Stop()
