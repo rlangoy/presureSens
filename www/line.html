@@ -1,0 +1,199 @@
+
+<!doctype html>
+<html>
+ 
+<head>
+    <title>Preasure measurements</title>
+    <script src = "Chart.min.js"></script>    
+    <style>
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+ 
+    /* Data Table Styling */
+    #dataTable {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+ 
+    #dataTable td, #dataTable th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+ 
+    #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+    #dataTable tr:hover {background-color: #ddd;}
+ 
+    #dataTable th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #4CAF50;
+      color: white;
+    }
+    </style>
+</head>
+ 
+<body>
+    <div>
+    <div class="chart-container" position: relative; height:350px; width:100%">
+        <canvas id="Chart" width="400" height="400"></canvas>
+    </div>
+<br>
+<br>    
+ 
+<script>
+//Graphs visit: https://www.chartjs.org
+var values = [];
+var timeStamp = [];
+
+var count =0;
+var maxSampels=100;
+var xsampelNr=0;
+
+var    y=[1,20,13,24,35]
+var    x=[1,2,3,4,5,]
+
+
+function showGraph()
+{
+
+
+    var ctx = document.getElementById("Chart").getContext('2d');
+    Chart.defaults.global.legend.display = false;   // Diable labels
+
+    var count = 10;
+    var chData = {
+     labels : x,
+     datasets : [
+     {
+     fillColor : "rgba(220,220,220,0.5)",
+     strokeColor : "rgba(220,220,220,1)",
+     pointColor : "rgba(220,220,220,1)",
+     pointStrokeColor : "#fff",
+     data : y
+     }
+     ]
+     }
+
+    var Chart2 = new Chart(ctx, {
+        type: 'line',
+        data: chData ,
+        options: {
+            animation: false,
+            title: {
+                    display: true,
+                    text: "ADC Voltage"
+                },
+            maintainAspectRatio: false,
+            elements: {
+            line: {
+                    tension: 0.5 //Smoothening (Curved) of data lines
+                }
+            },
+            scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+            }
+        }
+    });
+ 
+
+}
+ 
+  function connectWebSocket()
+        {
+            var scheme
+            if (window.location.protocol == 'https:')
+                scheme = 'wss:';
+            else
+                scheme = 'ws:';
+            var wsUri = scheme + '//' + window.location.hostname;
+            console.log("Connecting to " + wsUri + "...")
+            websocket           = new WebSocket(wsUri);
+            websocket.onopen    = function(evt) { onOpen    (evt) };
+            websocket.onclose   = function(evt) { onClose   (evt) };
+            websocket.onmessage = function(evt) { onMessage (evt) };
+            websocket.onerror   = function(evt) { onError   (evt) };
+        }
+
+        function onOpen(evt)
+        {
+            console.log('WebSocket connection opened');
+            SendMsg("Get : A0)");
+ 
+        }
+
+        function onClose(evt)
+        {
+            console.log('WebSocket connection opened');
+        }
+
+        function onMessage(evt)
+        {
+            
+            const obj = JSON.parse(evt.data);
+            if (obj.A0)  
+            {
+                count++;
+                if(count>100)
+                {
+                  x.shift();
+                  y.shift();
+                }
+                
+                xsampelNr++;
+
+                x.push(xsampelNr);
+                y.push(obj.A0);
+
+                showGraph();
+                SendMsg("Get : A0)");
+            }
+            else
+                console.log('Unknown WebSocket msg from server:' + evt.data );
+
+        }
+
+        function onError(evt)
+        {
+            console.log('onError WebSocket :' + evt.data );
+        }
+
+        function SendMsg(msg)
+        {
+            websocket.send(msg);
+        }
+
+
+//On Page load show graphs
+window.onload = function() {
+    console.log(new Date().toLocaleTimeString());
+    showGraph();
+    connectWebSocket();
+};
+ 
+// Test by adding data to the graph
+function resize() {
+   x.push(2);
+   y.push(3);
+
+};
+
+window.addEventListener('resize', resize, false);
+
+    //  values.push(ADCValue);
+    //  timeStamp.push(time);
+    //  showGraph();  //Update Graphs
+        
+</script>
+</body>
+ 
+</html>
+ 
