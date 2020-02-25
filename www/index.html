@@ -8,16 +8,9 @@
         margin: 0;
         background: #fff
     }</style>
+
+
 </head>
-<body>
-
-
-<tr>
-                    <td style="width:14.4px; text-align: right">R: </td>
-                    <td><input class="enabled" id="r" type="range" min="0" max="1023" step="1" oninput="sendRGB();" value="0"></td>
-                </tr>
-
-
 <hr>
 
 
@@ -38,6 +31,9 @@
 <script async src="gauge.min.js"></script>
 
 <script>
+
+
+
 if (!Array.prototype.forEach) {
     Array.prototype.forEach = function(cb) {
         var i = 0, s = this.length;
@@ -88,6 +84,7 @@ function stopGaugesAnimation() {
         {
            // output = gauge.value;//document.getElementById("output");
             testWebSocket();
+            resize();
         }
 
         function testWebSocket()
@@ -172,6 +169,27 @@ function stopGaugesAnimation() {
             pre.innerHTML = s;
            // output.appendChild(pre);
         }
+
+        function resize() {
+          
+                height = window.innerHeight-40;
+                width = window.innerWidth-40;
+
+                    document.gauges.forEach(function(gauge) {
+                            
+                            gauge.update({width : width,
+                                height : height
+
+                            })
+
+
+                        });
+
+
+        };
+
+        window.addEventListener('resize', resize, false);
+
 
         window.addEventListener("load", init, false);
 
