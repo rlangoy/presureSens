@@ -10,6 +10,7 @@ _voltage = 1
 _webSockets = [ ]
 
 _logDir="log"
+_logFilePtr=None     # _logFilePtr = open('numbers.csv', 'rw')
 
 #Create logDir if it does not exist
 try:
@@ -27,7 +28,7 @@ def GetNewRecordFileName():
     recordFileName=str(lastRecordFileNumber+1)+'.csv'
     return recordFileName
 
-
+print("Ready to log to file: "+ GetNewRecordFileName() )
 mws2 = MicroWebSrv2()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
@@ -67,15 +68,11 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
     global _webSockets
     _webSockets.append(webSocket)
     
-
-# ============================================================================
-# ============================================================================
 # ============================================================================
 
 def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
     global _voltage       # Acess the global voltage value
-    global _logging       # Acess the global voltage value
     try:
         jsonMsg= ujson.loads(msg)
     
@@ -87,10 +84,10 @@ def OnWebSocketTextMsg(webSocket, msg) :
             webSocket.SendTextMessage(JSONmessage)            
 
         if(jsonMsg.get('Enable') =='Logging'):                 
-            _logging=True
+            startLogging()
 
         if(jsonMsg.get('Disable') =='Logging'):            
-            _logging=False
+            stopLogging()
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
@@ -112,6 +109,21 @@ def OnWebSocketClosed(webSocket) :
 # ============================================================================
 # ============================================================================
 
+def startLogging():
+    global _logging           # Acess the global loging state
+    global _logFilePtr
+    global _logDir
+    _logging=True
+    fname='www/'+_logDir+'/'+GetNewRecordFileName()
+    print(fname)
+    _logFilePtr = open(fname, 'w')
+#    _logFilePtr.write("Amplitude")
+        
+def stopLogging():
+    global _logging           # Acess the global loging state
+    _logging=False
+    _logFilePtr.close()  # close the log file
+
 # Loads the WebSockets module globally and configure it,
 wsMod = MicroWebSrv2.LoadModule('WebSockets')
 wsMod.OnWebSocketAccepted = OnWebSocketAccepted
@@ -127,7 +139,10 @@ try :
         if(_voltage > 100):
             _voltage=0
          
-        sleep(.01)
+        sleep(.1)
+        if(_logging==True):
+            print("log: "+ str(_voltage))
+            _logFilePtr.write(str(_voltage)+'\n')
 #        for ws in _webSockets :
 #            JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
 #            ws.SendTextMessage(JSONmessage)
