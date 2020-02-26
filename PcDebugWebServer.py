@@ -1,8 +1,9 @@
 from MicroWebSrv2 import *
-from time         import sleep
+from time         import sleep,time
 from _thread       import allocate_lock
 import os
 import ujson
+import datetime
 
 #global vars
 _logging = False       #Controls the file logging
@@ -141,8 +142,9 @@ try :
          
         sleep(.1)
         if(_logging==True):
-            print("log: "+ str(_voltage))
-            _logFilePtr.write(str(_voltage)+'\n')
+            logStr=str(datetime.datetime.utcnow().timestamp())+','+str(_voltage)+'\n'
+            print(logStr)
+            _logFilePtr.write(logStr)
 #        for ws in _webSockets :
 #            JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
 #            ws.SendTextMessage(JSONmessage)
