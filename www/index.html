@@ -40,6 +40,11 @@
       color:#FFF
     }
 
+    .btn-red{
+      background-color:#E70909;
+      color:#FFF
+    }
+
     .btn:hover{
       border:1px solid #056495;
       color:#056495
@@ -58,6 +63,12 @@
 <h1>Presure Sensing</h1>
 
 
+<a class="btn btn-circled btn-large btn-blue" id="record" onclick="tootgleRecordBtn()">
+  Start Record
+</a>
+<br>
+<br>
+<br>
 <a class="btn btn-circled btn-large btn-blue" href="adcGauge.html">
   Gauge
 </a>
@@ -68,6 +79,45 @@
   Line Chart
 </a>
 
+<br>
+<br>
+<br>
+<a class="btn btn-circled btn-large btn-blue" href="line.html">
+   Recorded Data
+</a>
+
 
 </body>
 </html>
+
+
+ <script language="javascript">
+var _bRecord=false;
+
+    function tootgleRecordBtn()
+    {
+        _bRecord=!_bRecord; // Toogle btn
+        updateRecordBtn(_bRecord);
+    }
+
+    function updateRecordBtn(bRecordingState)
+    {
+        _bRecord=bRecordingState; // Update global record state
+        var btnRecord = document.getElementById("record");
+        if(bRecordingState)
+        {
+            btnRecord.className ="btn btn-circled btn-large btn-red";
+            btnRecord.text ="Stop Record";
+        }
+        else
+        {
+            btnRecord.className ="btn btn-circled btn-large btn-blue";
+            btnRecord.text ="Start Record";
+        }
+
+
+    }
+
+
+</script>
+    
