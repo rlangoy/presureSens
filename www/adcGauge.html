@@ -29,7 +29,7 @@
 
 
 <script async src="gauge.min.js"></script>
-
+<script src="sweetalert.min.js"></script>
 <script>
 
 
@@ -120,7 +120,7 @@ function stopGaugesAnimation() {
         function onClose(evt)
         {
             console.log('WebSocket connection opened');
-            writeToScreen("<strong>-- DISCONNECTED --</strong>");
+            swal("ESP32", "Connection was lost!", "error");
         }
 
         function onMessage(evt)

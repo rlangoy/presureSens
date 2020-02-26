@@ -4,7 +4,8 @@
  
 <head>
     <title>Preasure measurements</title>
-    <script src = "Chart.min.js"></script>    
+    <script src = "Chart.min.js"></script>
+     <script src="sweetalert.min.js"></script>    
     <style>
     canvas{
         -moz-user-select: none;
@@ -132,7 +133,8 @@ function showGraph()
 
         function onClose(evt)
         {
-            console.log('WebSocket connection opened');
+            swal("ESP32", "Connection was lost!", "error");
+            console.log('WebSocket connection closed');
         }
 
         function onMessage(evt)
