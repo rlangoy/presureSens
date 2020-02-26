@@ -11,3 +11,5 @@ ESP32 WEB ADC Gauge and line chart
 [MicroWebSrv2](https://microwebsrv2.hc2.fr/)  :  Python Webserver framework<br>
 [Chart.js](https://www.chartjs.org/)     :  JavaScript Chart component<br>
 [Canvas Gauges](https://canvas-gauges.com/) :  JavaScript Gauge component <br>
+[SweetAlert ](https://sweetalert.js.org/) :  JavaScript MessageBox component <br>
+
