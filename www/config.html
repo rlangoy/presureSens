@@ -15,35 +15,10 @@
 <h1>Presure Sensing</h1>
 
 
-<a class="btn btn-circled btn-large btn-blue" id="record" onclick="tootgleRecordBtn()">
-  Start Record
-</a>
-<br>
-<br>
-<br>
-<a class="btn btn-circled btn-large btn-blue" href="adcGauge.html">
-  Gauge
-</a>
-<br>
-<br>
-<br>
-<a class="btn btn-circled btn-large btn-blue" href="line.html">
-  Line Chart
+<a class="btn btn-circled btn-large btn-red" id="delete" onclick="deteLogFiles()">
+  Delete logfiles
 </a>
 
-<br>
-<br>
-<br>
-<a class="btn btn-circled btn-large btn-blue" href="/show-recoredsessions">
-   Recorded Data
-</a>
-
-<br>
-<br>
-<br>
-<a class="btn btn-circled btn-large btn-blue" href="config.html">
-   Config
-</a>
 
 
 </body>
@@ -53,32 +28,13 @@
  <script language="javascript">
 var _bRecord=false;
 
-    function tootgleRecordBtn()
+    function deteLogFiles()
     {
-        _bRecord=!_bRecord; // Toogle btn
-        updateRecordBtn(_bRecord);
-        if(_bRecord==true)
-            SendMsg('{"Enable" : "Logging"}');
-        else
-           SendMsg('{"Disable" : "Logging"}'); 
+       
+          // SendMsg('{"Disable" : "Logging"}'); 
     }
 
-    function updateRecordBtn(bRecordingState)
-    {
-        _bRecord=bRecordingState; // Update global record state
-        var btnRecord = document.getElementById("record");
-        if(bRecordingState)
-        {
-            btnRecord.className ="btn btn-circled btn-large btn-red";
-            btnRecord.text ="Stop Record";
-        }
-        else
-        {
-            btnRecord.className ="btn btn-circled btn-large btn-blue";
-            btnRecord.text ="Start Record";
-        }
-    }
-
+  
 
 
         function initWebSocketConnection()
@@ -100,8 +56,7 @@ var _bRecord=false;
         function onOpen(evt)
         {
             console.log('WebSocket connection opened');
-            SendMsg('{"Get" : "isLogging"}');
-
+  
         }
 
         function onClose(evt)
@@ -113,17 +68,6 @@ var _bRecord=false;
         function onMessage(evt)
         {
             
-            const obj = JSON.parse(evt.data);
-            if (obj.isLogging)  
-            {
-                console.log('obj.isLogging :' + obj.isLogging);
-                if(obj.isLogging == 'False')
-                    updateRecordBtn(false);
-                else
-                    updateRecordBtn(true);
-
-            }
-            else
                 console.log('Unknown WebSocket msg from server:' + evt.data );
 
         }
