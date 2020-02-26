@@ -2,6 +2,7 @@ from MicroWebSrv2 import *
 from time         import sleep
 from _thread       import allocate_lock
 from machine import ADC,Pin
+import os
 adc = ADC(Pin(33))            # create ADC object on ADC pin
 adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 0.0v - 3.6v)
 
