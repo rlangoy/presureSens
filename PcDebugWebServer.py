@@ -4,19 +4,44 @@ from _thread       import allocate_lock
 import os
 import ujson
 
+#global vars
+_logging = False       #Controls the file logging
+_voltage = 1
+_webSockets = [ ]
+
+_logDir="log"
+
+#Create logDir if it does not exist
+try:
+    os.stat("www/"+_logDir)
+except:
+    os.mkdir("www/"+_logDir)
+
+def GetNewRecordFileName():
+    strFiles=os.listdir("www/"+_logDir)
+    fileCnt=len(strFiles)
+    lastRecordFileNumber=99
+    if (fileCnt>0):
+        lastRecordFile=max(strFiles)
+        lastRecordFileNumber = max([int(sub.split('.')[0]) for sub in strFiles])
+    recordFileName=str(lastRecordFileNumber+1)+'.csv'
+    return recordFileName
+
+
 mws2 = MicroWebSrv2()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
-    strFiles=os.listdir("www")
+    strFiles=os.listdir("www/"+_logDir)
     htmlFiles=""
     for file in strFiles :
-        htmlFiles=htmlFiles+ '<a href="' + file + '">'+file+'</a>' + '<br>'
+        htmlFiles=htmlFiles+ '<a href="' +_logDir+'/'+ file + '">'+file+'</a>' + '<br>'
         
        # <a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>
     content = """\
     <!DOCTYPE html>
     <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1" /> 
             <title>Recorded Seccions</title>
         </head>
         <body>
@@ -47,13 +72,6 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
 # ============================================================================
 # ============================================================================
 
-#global _voltage
-_logging = False       #Controls the file logging
-_voltage = 1
-_webSockets = [ ]
-
-
-
 def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
     global _voltage       # Acess the global voltage value
@@ -73,8 +91,6 @@ def OnWebSocketTextMsg(webSocket, msg) :
 
         if(jsonMsg.get('Disable') =='Logging'):            
             _logging=False
-
-
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
@@ -101,8 +117,9 @@ wsMod = MicroWebSrv2.LoadModule('WebSockets')
 wsMod.OnWebSocketAccepted = OnWebSocketAccepted
 
 mws2.StartManaged()
-
 cnt=0
+
+
 # Main program loop until keyboard interrupt,
 try :
     while True :
