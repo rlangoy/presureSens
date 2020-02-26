@@ -1,10 +1,17 @@
 from MicroWebSrv2 import *
 from time         import sleep
 from _thread       import allocate_lock
+import os
 
 mws2 = MicroWebSrv2()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
+    strFiles=os.listdir("www")
+    htmlFiles=""
+    for file in strFiles :
+        htmlFiles=htmlFiles+ '<a href="' + file + '">'+file+'</a>' + '<br>'
+        
+       # <a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>
     content = """\
     <!DOCTYPE html>
     <html>
@@ -12,12 +19,11 @@ def RequestTestPost(microWebSrv2, request) :
             <title>Recorded Seccions</title>
         </head>
         <body>
-            <h2>Her kommer data filene</h2>
-            User address: %s<br />
-            
+            <h2>Log Files:</h2>
+            %s
         </body>
     </html>
-    """ % request.UserAddress[0]
+    """ % (htmlFiles)
     request.Response.ReturnOk(content)
 
 

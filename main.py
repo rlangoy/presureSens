@@ -7,6 +7,28 @@ adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 
 
 mws2 = MicroWebSrv2()
 mws2.SetEmbeddedConfig()
+@WebRoute(GET, '/show-recoredsessions', name='Show recordings')
+def RequestTestPost(microWebSrv2, request) :
+    strFiles=os.listdir("www")
+    htmlFiles=""
+    for file in strFiles :
+        htmlFiles=htmlFiles+ '<a href="' + file + '">'+file+'</a>' + '<br>'
+        
+       # <a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>
+    content = """\
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Recorded Seccions</title>
+        </head>
+        <body>
+            <h2>Log Files:</h2>
+            %s
+        </body>
+    </html>
+    """ % (htmlFiles)
+    request.Response.ReturnOk(content)
+
 global _voltage
 _voltage = 1
 _webSockets = [ ]
