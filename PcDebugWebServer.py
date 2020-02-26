@@ -2,6 +2,7 @@ from MicroWebSrv2 import *
 from time         import sleep
 from _thread       import allocate_lock
 import os
+import ujson
 
 mws2 = MicroWebSrv2()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
@@ -49,16 +50,22 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
 #global _voltage
 _voltage = 1
 _webSockets = [ ]
+_loging = False
 
 def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
-    global _voltage       # Acess the global voltage value
-  #  _voltage=_voltage+7
-  #  if(_voltage >99):
-  #       _voltage=1
-    JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
-    webSocket.SendTextMessage(JSONmessage)
-    #webSocket.SendTextMessage('%s' % _voltage)
+    try:
+        jsonMsg= ujson.loads(msg)
+        if(jsonMsg.get('Get') =='isLogging'):
+            webSocket.SendTextMessage("{\"isLogging\":\"" + str(_loging)+"\"}")
+
+        if(jsonMsg.get('Get') =='Voltage_A0'):
+            global _voltage       # Acess the global voltage value    
+            JSONmessage = "{\"Voltage_A0\":\"" + str(_voltage)+"\"}"
+            webSocket.SendTextMessage(JSONmessage)            
+    except:
+        print("OnWebSocketTextMsg Msg not proper JSON formated")
+    
 
 # ------------------------------------------------------------------------
 
@@ -99,3 +106,4 @@ try :
         
 except KeyboardInterrupt :
     mws2.Stop()
+ 

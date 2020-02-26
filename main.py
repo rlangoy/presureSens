@@ -3,6 +3,7 @@ from time         import sleep
 from _thread       import allocate_lock
 from machine import ADC,Pin
 import os
+import ujson
 
 adc = ADC(Pin(33))            # create ADC object on ADC pin
 adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 0.0v - 3.6v)
@@ -55,9 +56,17 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
 
 def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
-    global _voltage       # Acess the global voltage value
-    JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
-    webSocket.SendTextMessage(JSONmessage)
+    try:
+        jsonMsg= ujson.loads(msg)
+        if(jsonMsg.get('Get') =='isLogging'):
+            webSocket.SendTextMessage("{\"isLogging\":\"" + str(_loging)+"\"}")
+
+        if(jsonMsg.get('Get') =='Voltage_A0'):
+            global _voltage       # Acess the global voltage value    
+            JSONmessage = "{\"Voltage_A0\":\"" + str(_voltage)+"\"}"
+            webSocket.SendTextMessage(JSONmessage)            
+    except:
+        print("OnWebSocketTextMsg Msg not proper JSON formated")
   
 
 # ------------------------------------------------------------------------
