@@ -3,6 +3,23 @@ from time         import sleep
 from _thread       import allocate_lock
 
 mws2 = MicroWebSrv2()
+@WebRoute(GET, '/show-recoredsessions', name='Show recordings')
+def RequestTestPost(microWebSrv2, request) :
+    content = """\
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Recorded Seccions</title>
+        </head>
+        <body>
+            <h2>Her kommer data filene</h2>
+            User address: %s<br />
+            
+        </body>
+    </html>
+    """ % request.UserAddress[0]
+    request.Response.ReturnOk(content)
+
 
 #mws2.SetEmbeddedConfig()
 voltage=100
