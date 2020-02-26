@@ -3,6 +3,7 @@ from time         import sleep
 from _thread       import allocate_lock
 from machine import ADC,Pin
 import os
+
 adc = ADC(Pin(33))            # create ADC object on ADC pin
 adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 0.0v - 3.6v)
 
@@ -14,12 +15,12 @@ def RequestTestPost(microWebSrv2, request) :
     htmlFiles=""
     for file in strFiles :
         htmlFiles=htmlFiles+ '<a href="' + file + '">'+file+'</a>' + '<br>'
-        
-       # <a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>
+    
     content = """\
-    <!DOCTYPE html>
+    <!DOCTYPE html>    
     <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1" /> 
             <title>Recorded Seccions</title>
         </head>
         <body>
