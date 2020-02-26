@@ -99,6 +99,10 @@ var _bRecord=false;
     {
         _bRecord=!_bRecord; // Toogle btn
         updateRecordBtn(_bRecord);
+        if(_bRecord==true)
+            SendMsg('{"Enable" : "Logging"}');
+        else
+           SendMsg('{"Disable" : "Logging"}'); 
     }
 
     function updateRecordBtn(bRecordingState)
@@ -132,6 +136,7 @@ var _bRecord=false;
             websocket.onclose   = function(evt) { onClose   (evt) };
             websocket.onmessage = function(evt) { onMessage (evt) };
             websocket.onerror   = function(evt) { onError   (evt) };
+            SendMsg('{"Get" : "isLogging"}');
         }
 
         function onOpen(evt)
@@ -152,8 +157,11 @@ var _bRecord=false;
             const obj = JSON.parse(evt.data);
             if (obj.isLogging)  
             {
-
                 console.log('obj.isLogging :' + obj.isLogging);
+                if(obj.isLogging == 'False')
+                    updateRecordBtn(false);
+                else
+                    updateRecordBtn(true);
 
             }
             else

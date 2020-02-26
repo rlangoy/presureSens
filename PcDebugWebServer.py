@@ -48,23 +48,35 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
 # ============================================================================
 
 #global _voltage
+_logging = False       #Controls the file logging
 _voltage = 1
 _webSockets = [ ]
-_loging = False
+
+
 
 def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
+    global _voltage       # Acess the global voltage value
+    global _logging       # Acess the global voltage value
     try:
         jsonMsg= ujson.loads(msg)
+    
         if(jsonMsg.get('Get') =='isLogging'):
-            webSocket.SendTextMessage("{\"isLogging\":\"" + str(_loging)+"\"}")
+            webSocket.SendTextMessage("{\"isLogging\":\"" + str(_logging)+"\"}")
 
-        if(jsonMsg.get('Get') =='Voltage_A0'):
-            global _voltage       # Acess the global voltage value    
+        if(jsonMsg.get('Get') =='Voltage_A0'):           
             JSONmessage = "{\"Voltage_A0\":\"" + str(_voltage)+"\"}"
             webSocket.SendTextMessage(JSONmessage)            
+
+        if(jsonMsg.get('Enable') =='Logging'):                 
+            _logging=True
+
+        if(jsonMsg.get('Disable') =='Logging'):            
+            _logging=False
+
+
     except:
-        print("OnWebSocketTextMsg Msg not proper JSON formated")
+        print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
 
 # ------------------------------------------------------------------------
