@@ -115,10 +115,69 @@ var _bRecord=false;
             btnRecord.className ="btn btn-circled btn-large btn-blue";
             btnRecord.text ="Start Record";
         }
-
-
     }
 
+
+
+        function initWebSocketConnection()
+        {
+            var scheme
+            if (window.location.protocol == 'https:')
+                scheme = 'wss:';
+            else
+                scheme = 'ws:';
+            var wsUri = scheme + '//' + window.location.hostname;            
+            websocket           = new WebSocket(wsUri);
+            websocket.onopen    = function(evt) { onOpen    (evt) };
+            websocket.onclose   = function(evt) { onClose   (evt) };
+            websocket.onmessage = function(evt) { onMessage (evt) };
+            websocket.onerror   = function(evt) { onError   (evt) };
+        }
+
+        function onOpen(evt)
+        {
+            console.log('WebSocket connection opened');
+            SendMsg('{"Get" : "isLogging"}');
+
+        }
+
+        function onClose(evt)
+        {
+            console.log('WebSocket connection opened');
+        }
+
+        function onMessage(evt)
+        {
+            
+            const obj = JSON.parse(evt.data);
+            if (obj.isLogging)  
+            {
+
+                console.log('obj.isLogging :' + obj.isLogging);
+
+            }
+            else
+                console.log('Unknown WebSocket msg from server:' + evt.data );
+
+        }
+
+        function onError(evt)
+        {
+            console.log('ERROR WebSocket msg from server:' + evt.data );
+        }
+
+        function SendMsg(msg)
+        {            
+            websocket.send(msg);
+        }
+
+    function init()
+    {    
+        initWebSocketConnection();
+        
+    }
+
+    window.addEventListener("load", init, false);
 
 </script>
     

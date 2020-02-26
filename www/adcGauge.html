@@ -105,9 +105,8 @@ function stopGaugesAnimation() {
 
         function onOpen(evt)
         {
-            console.log('WebSocket connection opened');
-            writeToScreen("<strong>-- CONNECTED --</strong>");
-            SendMsg("Get : A0)");
+            console.log('WebSocket connection opened');            
+            SendMsg('{"Get" : "Voltage_A0"}');
             //setTimeout( function() { websocket.close() }, 3000 )
             document.gauges.forEach(function(gauge) {
                     gauge.value = 0;
@@ -128,20 +127,16 @@ function stopGaugesAnimation() {
         {
             
             const obj = JSON.parse(evt.data);
-            if (obj.A0)  
+            
+            if (obj.Voltage_A0)  
             {
             //writeToScreen('MSG FROM SERVER : <span style="color: blue;">' + evt.data + '</span>');
                 document.gauges.forEach(function(gauge) {
-                    var adcVal=parseFloat(obj.A0);
+                    var adcVal=parseFloat(obj.Voltage_A0);
                     //adcVal=10.2;
-                    console.log('adcVal: ' + adcVal);
+                    //console.log('adcVal: ' + adcVal);
                     gauge.value = adcVal;
-                    SendMsg("Get : A0)");
-                    //document.getElementById('r').value=adcVal*10;
-
-                   // gauge.update({animation: false,
-                    //              value: adcVal})
-                   // gauge.update()
+                    SendMsg('{"Get" : "Voltage_A0"}');
 
 
                 });

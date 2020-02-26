@@ -126,7 +126,7 @@ function showGraph()
         function onOpen(evt)
         {
             console.log('WebSocket connection opened');
-            SendMsg("Get : A0)");
+            SendMsg('{"Get" : "Voltage_A0"}');
  
         }
 
@@ -139,7 +139,7 @@ function showGraph()
         {
             
             const obj = JSON.parse(evt.data);
-            if (obj.A0)  
+            if (obj.Voltage_A0)  
             {
                 count++;
                 if(count>100)
@@ -151,10 +151,10 @@ function showGraph()
                 xsampelNr++;
 
                 x.push(xsampelNr);
-                y.push(obj.A0);
+                y.push(obj.Voltage_A0);
 
                 showGraph();
-                SendMsg("Get : A0)");
+                SendMsg('{"Get" : "Voltage_A0"}');
             }
             else
                 console.log('Unknown WebSocket msg from server:' + evt.data );
