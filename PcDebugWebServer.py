@@ -3,7 +3,7 @@ from time         import sleep,time
 from _thread       import allocate_lock
 import os
 import ujson
-import time
+import datetime
 
 #global vars
 _logging = False       #Controls the file logging
@@ -139,7 +139,7 @@ def startLogging():
     fname='www/'+_logDir+'/'+GetNewRecordFileName()
     print(fname)
     _logFilePtr = open(fname, 'w')
-#    _logFilePtr.write("Amplitude")
+    _logFilePtr.write("Time,Amplitude\n")
         
 def stopLogging():
     global _logging           # Acess the global loging state
@@ -179,7 +179,7 @@ try :
         sleep(.1)
         if(_logging==True):
             logStr=str(datetime.datetime.utcnow().timestamp())+','+str(_voltage)+'\n'
-            print(logStr)
+            #print(logStr)
             _logFilePtr.write(logStr)
 #        for ws in _webSockets :
 #            JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
