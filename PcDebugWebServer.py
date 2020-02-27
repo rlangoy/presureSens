@@ -3,7 +3,7 @@ from time         import sleep,time
 from _thread       import allocate_lock
 import os
 import ujson
-import datetime
+import time
 
 #global vars
 _logging = False       #Controls the file logging
@@ -95,6 +95,21 @@ def OnWebSocketTextMsg(webSocket, msg) :
             JSONmessage = "{\"Loggs\" : \"Deleted\"}"
             webSocket.SendTextMessage(JSONmessage)            
 
+        if(jsonMsg.get('GetFile')):
+            fileName=jsonMsg.get('GetFile')
+            print("Open file: " + fileName)
+            f = open(fileName)
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                splLine=line.rstrip().split(',')
+                JSONmessage = "{\"Voltage_A0\":\"" + splLine[1]+"\"}"                
+                webSocket.SendTextMessage(JSONmessage)                
+                
+            f.close()
+
+
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
@@ -144,6 +159,7 @@ def deleteLogging():
         except:
             print("error rem file")
     
+
 
 # Loads the WebSockets module globally and configure it,
 wsMod = MicroWebSrv2.LoadModule('WebSockets')

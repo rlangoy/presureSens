@@ -1,5 +1,5 @@
 from MicroWebSrv2 import *
-from time         import sleep
+import time
 from _thread       import allocate_lock
 from machine import ADC,Pin
 import os
@@ -169,8 +169,13 @@ try :
         #print(_voltage)
         if(_voltage > 100):
             _voltage=0
-         
-        sleep(.1)        
+
+        #fulspead read if logging
+        if(_logging==True):
+            logStr=str(time.ticks_us())+','+str(_voltage)+'\n'         
+            _logFilePtr.write(logStr)
+        else:
+            time.sleep(.1)
         
 except KeyboardInterrupt :
     mws2.Stop()
