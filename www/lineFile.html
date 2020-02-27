@@ -4,7 +4,7 @@
 <head>
     <title>Preasure measurements</title>
     <script src = "Chart.min.js"></script>
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script src = "d3.min.js"></script>
     
 </head>
  
@@ -17,29 +17,17 @@
 <br>    
 
 <script>
-//var logfile="log/101.csv"
-//var logfile="atp_wta.csv"
-//var logfile="test3.csv"
-//var logfile="log/101.csv"
 
-function makeChart(players) {
-  // players is an array of objects where each object is something like:
-  // {
-  //   "Name": "Steffi Graf",
-  //   "Weeks": "377",
-  //   "Gender": "Female"
-  // }
+function makeChart(dataInput) {
 
-
-
-  var timeLabels = players.map(function(d) {
+  var timeLabels = dataInput.map(function(d) {
     return d.Time;
   });
-  var ampData = players.map(function(d) {
+  var ampData = dataInput.map(function(d) {
     return d.Amplitude;
   });
 
-  
+  console.log(dataInput)
   var chart = new Chart('chart', {
     type: "line",
     options: {
