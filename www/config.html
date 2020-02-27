@@ -32,6 +32,20 @@ var _bRecord=false;
     {
        
           // SendMsg('{"Disable" : "Logging"}'); 
+        swal({
+          title: "Are you sure?",
+          text: "Delete all logfiles files!",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            SendMsg('{"Delete" : "Loggs"}');
+          } 
+          
+        });
+
     }
 
   
@@ -67,7 +81,13 @@ var _bRecord=false;
 
         function onMessage(evt)
         {
-            
+            const obj = JSON.parse(evt.data);
+            if (obj.Loggs)  
+            {                
+                if(obj.Loggs == 'Deleted')
+                    swal("Poof!!", "Loggfiles has been deleted!", "success");
+            }
+            else
                 console.log('Unknown WebSocket msg from server:' + evt.data );
 
         }
