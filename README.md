@@ -12,4 +12,6 @@ ESP32 WEB ADC Gauge and line chart
 [Chart.js](https://www.chartjs.org/)     :  JavaScript Chart component<br>
 [Canvas Gauges](https://canvas-gauges.com/) :  JavaScript Gauge component <br>
 [SweetAlert ](https://sweetalert.js.org/) :  JavaScript MessageBox component <br>
+[D3: Data-Driven Documents ](https://https://d3js.org/) :  JavaScript library for manipulating documents <br>
+
 
