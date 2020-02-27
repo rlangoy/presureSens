@@ -9,6 +9,7 @@ _voltage = 1
 _webSockets = [ ]
 
 _logDir="log"
+_logFilePtr=None     # _logFilePtr = open('numbers.csv', 'rw')
 
 #Create logDir if it does not exist
 try:
@@ -89,10 +90,16 @@ def OnWebSocketTextMsg(webSocket, msg) :
             webSocket.SendTextMessage(JSONmessage)            
 
         if(jsonMsg.get('Enable') =='Logging'):                 
-            _logging=True
+            startLogging()
 
         if(jsonMsg.get('Disable') =='Logging'):            
-            _logging=False
+            stopLogging()
+
+        if(jsonMsg.get('Delete') =='Loggs'):
+            deleteLogging()
+            JSONmessage = "{\"Loggs\" : \"Deleted\"}"
+            webSocket.SendTextMessage(JSONmessage)            
+
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
@@ -113,6 +120,37 @@ def OnWebSocketClosed(webSocket) :
 # ============================================================================
 # ============================================================================
 # ============================================================================
+
+
+def startLogging():
+    global _logging           # Acess the global loging state
+    global _logFilePtr
+    global _logDir
+    _logging=True
+    fname='www/'+_logDir+'/'+GetNewRecordFileName()
+    print(fname)
+    _logFilePtr = open(fname, 'w')
+#    _logFilePtr.write("Amplitude")
+        
+def stopLogging():
+    global _logging           # Acess the global loging state
+    _logging=False
+    _logFilePtr.close()  # close the log file
+
+def deleteLogging():
+    global _logging           # Acess the global loging state
+    global _logFilePtr
+    _logging=False
+    if(_logFilePtr!=None):
+        _logFilePtr.close()  # close the log file
+    strFiles=os.listdir("www/"+_logDir)    
+    for file in strFiles :
+        try:
+            os.remove("www/"+_logDir+"/"+file)        
+        except:
+            print("error rem file")
+    
+
 
 # Loads the WebSockets module globally and configure it,
 wsMod = MicroWebSrv2.LoadModule('WebSockets')

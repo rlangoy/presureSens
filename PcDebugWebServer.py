@@ -72,7 +72,7 @@ def OnWebSocketAccepted(microWebSrv2, webSocket) :
 # ============================================================================
 
 def OnWebSocketTextMsg(webSocket, msg) :
-    #print('WebSocket text --message: %s' % msg)
+    print('WebSocket text --message: %s' % msg)
     global _voltage       # Acess the global voltage value
     try:
         jsonMsg= ujson.loads(msg)
@@ -89,6 +89,12 @@ def OnWebSocketTextMsg(webSocket, msg) :
 
         if(jsonMsg.get('Disable') =='Logging'):            
             stopLogging()
+
+        if(jsonMsg.get('Delete') =='Loggs'):
+            deleteLogging()
+            JSONmessage = "{\"Loggs\" : \"Deleted\"}"
+            webSocket.SendTextMessage(JSONmessage)            
+
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
@@ -124,6 +130,20 @@ def stopLogging():
     global _logging           # Acess the global loging state
     _logging=False
     _logFilePtr.close()  # close the log file
+
+def deleteLogging():
+    global _logging           # Acess the global loging state
+    global _logFilePtr
+    _logging=False
+    if(_logFilePtr!=None):
+        _logFilePtr.close()  # close the log file
+    strFiles=os.listdir("www/"+_logDir)    
+    for file in strFiles :
+        try:
+            os.remove("www/"+_logDir+"/"+file)        
+        except:
+            print("error rem file")
+    
 
 # Loads the WebSockets module globally and configure it,
 wsMod = MicroWebSrv2.LoadModule('WebSockets')
