@@ -5,6 +5,7 @@ from machine import ADC,Pin
 import os
 import ujson
 
+_logging = False       #Controls the file logging
 _voltage = 1
 _webSockets = [ ]
 
@@ -36,10 +37,10 @@ mws2 = MicroWebSrv2()
 mws2.SetEmbeddedConfig()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
-    strFiles=os.listdir("www")
+    strFiles=os.listdir("www/"+_logDir)
     htmlFiles=""
     for file in strFiles :
-        htmlFiles=htmlFiles+ '<a href="' + file + '">'+file+'</a>' + '<br>'
+        htmlFiles=htmlFiles+ '<a href="' +_logDir+'/'+ file + '">'+file+'</a>' + '<br>'
     
     content = """\
     <!DOCTYPE html>    
@@ -79,6 +80,8 @@ def OnWebSocketTextMsg(webSocket, msg) :
     #print('WebSocket text --message: %s' % msg)
     global _voltage       # Acess the global voltage value
     global _logging       # Acess the global voltage value
+    msgLogging="{\"isLogging\":\"" + str(_logging)+"\"}"
+    print(msgLogging)
     try:
         jsonMsg= ujson.loads(msg)
     
