@@ -40,7 +40,7 @@ def RequestTestPost(microWebSrv2, request) :
     strFiles=os.listdir("www/"+_logDir)
     htmlFiles=""
     for file in strFiles :
-        htmlFiles=htmlFiles+ '<a href="' +_logDir+'/'+ file + '">'+file+'</a>' + '<br>'
+        htmlFiles=htmlFiles+'<a href="' +_logDir+'/'+ file + '">'+file+'</a>'+'&nbsp;&nbsp;&nbsp;&nbsp;<a href="lineFile.html?file='  +_logDir+'/'+ file + '">view </a> <br>'
     
     content = """\
     <!DOCTYPE html>    
