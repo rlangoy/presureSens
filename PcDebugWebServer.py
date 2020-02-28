@@ -139,7 +139,6 @@ def startLogging():
     fname='www/'+_logDir+'/'+GetNewRecordFileName()
     print(fname)
     _logFilePtr = open(fname, 'w')
-    _logFilePtr.write("Time,Amplitude\n")
         
 def stopLogging():
     global _logging           # Acess the global loging state
