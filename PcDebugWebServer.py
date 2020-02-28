@@ -95,21 +95,6 @@ def OnWebSocketTextMsg(webSocket, msg) :
             JSONmessage = "{\"Loggs\" : \"Deleted\"}"
             webSocket.SendTextMessage(JSONmessage)            
 
-        if(jsonMsg.get('GetFile')):
-            fileName=jsonMsg.get('GetFile')
-            print("Open file: " + fileName)
-            f = open(fileName)
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                splLine=line.rstrip().split(',')
-                JSONmessage = "{\"Voltage_A0\":\"" + splLine[1]+"\"}"                
-                webSocket.SendTextMessage(JSONmessage)                
-                
-            f.close()
-
-
     except:
         print("OnWebSocketTextMsg Msg not proper JSON formated : " +msg)
     
