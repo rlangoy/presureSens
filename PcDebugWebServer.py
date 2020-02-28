@@ -31,6 +31,7 @@ def GetNewRecordFileName():
 
 print("Ready to log to file: "+ GetNewRecordFileName() )
 mws2 = MicroWebSrv2()
+
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
     strFiles=os.listdir("www/"+_logDir)
@@ -163,12 +164,8 @@ try :
         sleep(.1)
         if(_logging==True):
             logStr=str(datetime.datetime.utcnow().timestamp())+','+str(_voltage)+'\n'
-            #print(logStr)
             _logFilePtr.write(logStr)
-#        for ws in _webSockets :
-#            JSONmessage = "{\"A0\":\"" + str(_voltage)+"\"}";
-#            ws.SendTextMessage(JSONmessage)
-
+            _logFilePtr.flush()
         
 except KeyboardInterrupt :
     mws2.Stop()
