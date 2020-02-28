@@ -37,6 +37,9 @@ mws2 = MicroWebSrv2()
 mws2.SetEmbeddedConfig()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
+    freeFlashSize=uos.statvfs('/')[3]*uos.statvfs('/')[1] / 1000
+    freeSpace=str("Free space: %d Kb" %freeFlashSize)
+    
     strFiles=os.listdir("www/"+_logDir)
     htmlFiles=""
     for file in strFiles :
@@ -53,8 +56,10 @@ def RequestTestPost(microWebSrv2, request) :
             <h2>Log Files:</h2>
             %s
         </body>
+        <br>
+         %s 
     </html>
-    """ % (htmlFiles)
+    """ % (htmlFiles,freeSpace)
     request.Response.ReturnOk(content)
 
 def OnWebSocketAccepted(microWebSrv2, webSocket) :
@@ -132,7 +137,7 @@ def startLogging():
     _logging=True
     fname='www/'+_logDir+'/'+GetNewRecordFileName()
     print(fname)
-    _logFilePtr = open(fname, 'w')
+    _logFilePtr = open(fname, 'w  ')
 #    _logFilePtr.write("Amplitude")
         
 def stopLogging():
