@@ -38,6 +38,7 @@ mws2 = MicroWebSrv2()
 @WebRoute(GET, '/show-recoredsessions', name='Show recordings')
 def RequestTestPost(microWebSrv2, request) :
     strFiles=os.listdir("www/"+_logDir)
+    strFiles.sort()  # Sort files
     htmlFiles=""
     for file in strFiles :
         htmlFiles=htmlFiles+'<a href="' +_logDir+'/'+ file + '">'+file+'</a>&nbsp;&nbsp; '+str( int((os.path.getsize("www/"+_logDir+'/'+file))/1000))+' KB'+'&nbsp;&nbsp;&nbsp;&nbsp;<a href="lineFile.html?file='  +_logDir+'/'+ file + '">view </a> <br>'
