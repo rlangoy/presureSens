@@ -161,15 +161,15 @@ function makeChart(timeLabels,ampData) {
             enabled: true,
 
             // Enable drag-to-zoom behavior
-            // drag: true,
+            drag: true,
 
             // Drag-to-zoom effect can be customized
-            // drag: {
-            //   borderColor: 'rgba(225,225,225,0.3)'
-            //   borderWidth: 5,
-            //   backgroundColor: 'rgb(225,225,225)',
-            //   animationDuration: 0
-            // },
+            drag: {
+               borderColor: 'rgba(225,225,225,0.3)',
+               borderWidth: 5,
+               backgroundColor: 'rgb(225,225,225)',
+               animationDuration: 0
+             },
 
             // Zooming directions. Remove the appropriate direction to disable
             // Eg. 'y' would only allow zooming in the y direction
@@ -196,9 +196,9 @@ function makeChart(timeLabels,ampData) {
             //speed: 0.1,
 
             // Function called while the user is zooming
-            //onZoom: function({chart}) { console.log(`I'm zooming!!!`); },
+            onZoom: function({chart}) { console.log(`I'm zooming!!!`); },
             // Function called once zooming is completed
-            //onZoomComplete: function({chart}) { console.log(`I was zoomed!!!`); }
+            onZoomComplete: function({chart}) { console.log(`I was zoomed!!!`); }
           }
         }
       }
