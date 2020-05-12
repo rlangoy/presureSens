@@ -43,7 +43,8 @@ def RequestTestPost(microWebSrv2, request) :
     strFiles=os.listdir("www/"+_logDir)
     htmlFiles=""
     for file in strFiles :
-        htmlFiles=htmlFiles+'<a href="' +_logDir+'/'+ file + '">'+file+'</a>&nbsp;&nbsp; '+str( int((os.path.getsize("www/"+_logDir+'/'+file))/1000))+' KB'+'&nbsp;&nbsp;&nbsp;&nbsp;<a href="lineFile.html?file='  +_logDir+'/'+ file + '">view </a> <br>'    
+        fileSize=os.stat("www/"+_logDir+'/'+file)[6]
+        htmlFiles=htmlFiles+'<a href="' +_logDir+'/'+ file + '">'+file+'</a>&nbsp;&nbsp; '+str( int(fileSize/1000))+' KB'+'&nbsp;&nbsp;&nbsp;&nbsp;<a href="lineFile.html?file='  +_logDir+'/'+ file + '">view </a> <br>'    
     content = """\
     <!DOCTYPE html>    
     <html>
@@ -85,7 +86,7 @@ def OnWebSocketTextMsg(webSocket, msg) :
     global _voltage       # Acess the global voltage value
     global _logging       # Acess the global voltage value
     msgLogging="{\"isLogging\":\"" + str(_logging)+"\"}"
-    print(msgLogging)
+    #print(msgLogging)
     try:
         jsonMsg= ujson.loads(msg)
     
@@ -170,6 +171,7 @@ cnt=0
 try :
     while True :
         _voltage = (adc.read()*100/4095.0)+.01
+        #print(_voltage)
         #print(_voltage)
         if(_voltage > 100):
             _voltage=0
